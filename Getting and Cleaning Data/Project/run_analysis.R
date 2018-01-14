@@ -1,5 +1,5 @@
 #check and load packages
-packages <- c("data.table", "dplyr")
+packages <- c("data.table", "dplyr", "magrittr")
 check_packages <- function(...){
   lapply(list(...), function(p){
     if(! p %in% installed.packages()){
@@ -43,7 +43,7 @@ add_subject_var <- function(dt){
   names(dt) <- "Subject"
   dt
 }
-#read in general data 
+#read in general data
 activity_labels <- read_data("activity_labels.txt", download_dir)
 features <- read_data("features.txt", download_dir)
 
@@ -54,7 +54,7 @@ test_activity <- read_data("y_test.txt", download_dir) %>% label_activity()     
 test_subject <- read_data("subject_test.txt", download_dir) %>% add_subject_var()                         #dim() -> [1] 2947    1
 
 # read in train data
-train_data <- read_data("X_train.txt", download_dir) %>% label_data_                                      #dim() -> [1] 2947  561
+train_data <- read_data("X_train.txt", download_dir) %>% label_data_var()                                     #dim() -> [1] 2947  561
 train_activity <- read_data("y_train.txt", download_dir) %>% label_activity()                             #dim() -> [1] 2947    1
 train_subject <- read_data("subject_train.txt", download_dir) %>% add_subject_var()                       #dim() -> [1] 2947    1
 
@@ -83,12 +83,11 @@ write.table(tidy_data, file = "tidy_data.csv", sep = ",", row.names = F)
 # test_data <- test_data[, .SD, .SDcols = names(test_data) %like% "subject|activity|mean|std"]
 # test_data[, "data type" := rep("test", .N)]
 # setcolorder(test_data, c(c("subject","data type","activity" ), setdiff(names(test_data), c("subject","data type","activity" ))))
-# 
+#
 # train_data <- cbind(subject_train, activity_labels[y_train[,V1],2], X_train)
 # names(train_data) <- c("subject", "activity", as.character(features[,2]))
 # train_data <- train_data[, .SD, .SDcols = names(train_data) %like% "subject|activity|mean|std"]
 # train_data[, "data type" := rep("train", .N)]
 # setcolorder(train_data, c(c("subject","data type","activity" ), setdiff(?names(train_data), c("subject","data type","activity" ))))
-# 
+#
 # if (identical(names(test_data), names(train_data))) data <- rbind(test_data, train_data)
-
